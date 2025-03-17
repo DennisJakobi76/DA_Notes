@@ -5,6 +5,7 @@ import {
   collectionData,
   onSnapshot,
   addDoc,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { collection, doc } from '@firebase/firestore';
@@ -75,7 +76,7 @@ export class NoteListService {
     return doc(collection(this.firestore, colId), docId);
   }
 
-  async addNote(item: {}) {
+  async addNote(item: Note) {
     await addDoc(this.getNotesRef(), item)
       .catch((err) => {
         console.log(err);
@@ -83,5 +84,29 @@ export class NoteListService {
       .then((docRef) => {
         console.log('Document written with ID: ', docRef?.id);
       });
+  }
+
+  async updateNote(note: Note) {
+    if (note.id) {
+      let docRef = this.getSingleDocRef(this.getColIdFromNote(note), note.id);
+      await updateDoc(docRef, this.getCleanJson(note))
+        .catch((err) => {
+          console.log(err);
+        })
+        .then(() => {});
+    }
+  }
+
+  getCleanJson(note: Note) {
+    return {
+      title: note.title,
+      content: note.content,
+      type: note.type,
+      marked: note.marked,
+    };
+  }
+
+  getColIdFromNote(note: Note) {
+    return note.type === 'note' ? 'notes' : 'trash';
   }
 }
