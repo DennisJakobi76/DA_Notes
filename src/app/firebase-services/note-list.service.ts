@@ -30,12 +30,24 @@ export class NoteListService {
     this.unsubSingle = onSnapshot(
       this.getSingleDocRef('notes', 'QkKSn3F7H8F79o4NSq2s'),
       (element) => {
-        console.log(element);
+        console.log(element.data());
       }
     );
+  }
 
-    this.unsubSingle();
+  setNoteObject(obj: any, id: string): Note {
+    return {
+      id: id || '',
+      type: obj.type || 'note',
+      title: obj.title || '',
+      content: obj.content || '',
+      marked: obj.marked || false,
+    };
+  }
+
+  ngOnDestroy() {
     this.unsubList();
+    this.unsubSingle();
   }
 
   getTrashRef() {
