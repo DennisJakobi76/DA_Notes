@@ -125,10 +125,8 @@
                     </g>
                 </svg>
                 }
-
-
-
                 <p>Trash</p>
+
             </button>
         </div>
     </div>
@@ -142,8 +140,9 @@
             }
         </ul> -->
 
-        @for (note of noteList; track note) {
-        <app-note [note]="note"></app-note>
-        }
+        <!-- @for (note of noteList; track note) { -->
+        <app-note *ngFor="let note of getList('notes')" [note]="note"></app-note>
+        <app-note *ngFor="let note of getList('trash')" [note]="note"></app-note>
+        <!-- } -->
     </div>
 </div>
