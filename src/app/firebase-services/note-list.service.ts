@@ -79,10 +79,15 @@ export class NoteListService {
 
   async addNote(item: Note, colId: 'notes' | 'trash') {
     colId === 'notes' ? (item.type = 'note') : (item.type = 'trash');
-
-    await addDoc(this.getNotesRef(), item).catch((err) => {
-      console.log(err);
-    });
+    if (item.type === 'note') {
+      await addDoc(this.getNotesRef(), this.getCleanJson(item)).catch((err) => {
+        console.log(err);
+      });
+    } else {
+      await addDoc(this.getTrashRef(), this.getCleanJson(item)).catch((err) => {
+        console.log(err);
+      });
+    }
   }
 
   async updateNote(note: Note) {
@@ -95,9 +100,10 @@ export class NoteListService {
   }
 
   async deleteNote(colId: 'notes' | 'trash', docId: string) {
+    console.log(colId, docId);
+
     if (docId) {
-      let docRef = this.getSingleDocRef(colId, docId);
-      await deleteDoc(docRef).catch((err) => {
+      await deleteDoc(this.getSingleDocRef(colId, docId)).catch((err) => {
         console.log(err);
       });
     }
