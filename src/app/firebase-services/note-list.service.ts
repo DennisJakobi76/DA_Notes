@@ -7,9 +7,12 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
+  orderBy,
+  limit,
+  query,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { collection, doc } from '@firebase/firestore';
+import { collection, doc, where } from '@firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -57,7 +60,27 @@ export class NoteListService {
   }
 
   subNotesList() {
-    return onSnapshot(this.getNotesRef(), (list) => {
+    const q = query(
+      this.getNotesRef(),
+      orderBy('title'.toLowerCase(), 'asc'),
+      // where('marked', '==', false),
+      limit(100)
+    );
+    return onSnapshot(q, (list) => {
+      this.normalNotes = [];
+      list.forEach((element) => {
+        this.normalNotes.push(this.setNoteObject(element.data(), element.id));
+      });
+    });
+  }
+
+  subMarkedNotesList() {
+    const q = query(
+      this.getNotesRef(),
+      where('marked', '==', true),
+      limit(100)
+    );
+    return onSnapshot(q, (list) => {
       this.normalNotes = [];
       list.forEach((element) => {
         this.normalNotes.push(this.setNoteObject(element.data(), element.id));

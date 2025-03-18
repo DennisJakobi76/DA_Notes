@@ -131,7 +131,6 @@
         </div>
     </div>
     <div>
-
         <!-- <ul>
             @for(item of (this.noteService.items$ | async); track item){
             <li>
@@ -139,12 +138,6 @@
             </li>
             }
         </ul> -->
-
-        <!-- @for (note of noteList; track note) { -->
-        <!-- <app-note *ngFor="let note of getList('notes')" [note]="note"></app-note>
-        <app-note *ngFor="let note of getList('trash')" [note]="note"></app-note> -->
-        <!-- } -->
-
         <ng-container *ngIf="status === 'notes'">
             <app-note *ngFor="let note of getList('notes')" [note]="note"></app-note>
         </ng-container>
